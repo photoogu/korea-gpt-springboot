@@ -16,4 +16,6 @@ public interface StudentStudyMapper {       // Mapper 는 Interface 로 만들�
     // 성공 횟수 반환 (mapper 에서 insert 는 무조건 int 값 반환)
     int insertMajor(Major major);
     int insertInstructor(Instructor instructor);
+
+    int updateMajorName(Major major);
 }

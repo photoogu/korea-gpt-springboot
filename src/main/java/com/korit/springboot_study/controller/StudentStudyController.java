@@ -2,22 +2,30 @@ package com.korit.springboot_study.controller;
 
 import com.korit.springboot_study.dto.request.study.ReqAddInstructorDto;
 import com.korit.springboot_study.dto.request.study.ReqAddMajorDto;
+import com.korit.springboot_study.dto.request.study.ReqUpdateMajorDto;
 import com.korit.springboot_study.dto.response.common.SuccessResponseDto;
 import com.korit.springboot_study.entity.study.Instructor;
 import com.korit.springboot_study.entity.study.Major;
 import com.korit.springboot_study.service.StudentStudyService;
 import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
 import org.apache.ibatis.javassist.NotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.validation.BeanPropertyBindingResult;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.ObjectError;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.MethodArgumentNotValidException;
+import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
+import javax.validation.constraints.Min;
 import java.util.List;
+import java.util.regex.Pattern;
 
 @RestController
+@Validated // Controller 안에서 바로 유효성 검사를 하기 위한 어노테이션, DTO 의 유효성 검사를 위해서는 각 DTO 에 @Valid 를 붙여줘야함.
 public class StudentStudyController {
 
     @Autowired
@@ -36,15 +44,35 @@ public class StudentStudyController {
     }
 
     @PostMapping("/api/study/major")
-    public ResponseEntity<SuccessResponseDto<?>> addMajor(@RequestBody ReqAddMajorDto reqAddMajorDto) {
+    public ResponseEntity<SuccessResponseDto<Major>> addMajor(@Valid @RequestBody ReqAddMajorDto reqAddMajorDto) throws MethodArgumentNotValidException {
         System.out.println(reqAddMajorDto);
+
+        // 유효성 검사 >> 일일히 다 작성하지 않고, 라이브러리 사용! @Valid
+//        boolean isNull = reqAddMajorDto == null;
+//        boolean isBlank = reqAddMajorDto.getMajorName().isBlank();
+//        boolean isNotKor = !Pattern.matches("^[ㄱ-ㅎ|가-힣]*$", reqAddMajorDto.getMajorName());
+//        if (isNull || isBlank || isNotKor) {
+//            BindingResult bindingResult = new BeanPropertyBindingResult(null, "major");
+//            bindingResult.addError(new ObjectError("majorName", "학과명은 Null 또는 공백일 수 없고 한글로만 작성하여야 합니다."));
+//            throw new MethodArgumentNotValidException(null, bindingResult);
+//        }
+
         return ResponseEntity.ok().body(studentStudyService.addMajor(reqAddMajorDto));
     }
 
     @PostMapping("/api/study/instructor")
-    public ResponseEntity<SuccessResponseDto<?>> addInstructor(@RequestBody ReqAddInstructorDto reqAddInstructorDto) {
+    public ResponseEntity<SuccessResponseDto<Instructor>> addInstructor(@RequestBody ReqAddInstructorDto reqAddInstructorDto) {
         System.out.println(reqAddInstructorDto);
         return ResponseEntity.ok().body(studentStudyService.addInstructor(reqAddInstructorDto));
+    }
+
+    @PutMapping("/api/study/major/{majorId}")
+    public ResponseEntity<SuccessResponseDto<?>> updateMajor(
+            @ApiParam(value = "학과 ID", example = "1", required = true)
+            @PathVariable @Min(value = 1, message = "학과 ID는 1 이상의 정수여야 합니다.") int majorId, // > @Validated 로 예외처리가 됨(ConstraintViolationException)
+            @Valid @RequestBody ReqUpdateMajorDto reqUpdateMajorDto) throws MethodArgumentNotValidException, NotFoundException {
+
+        return ResponseEntity.ok().body(studentStudyService.modifyMajor(majorId, reqUpdateMajorDto));
     }
 
 }

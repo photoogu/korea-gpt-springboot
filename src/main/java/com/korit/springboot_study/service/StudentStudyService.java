@@ -2,6 +2,7 @@ package com.korit.springboot_study.service;
 
 import com.korit.springboot_study.dto.request.study.ReqAddInstructorDto;
 import com.korit.springboot_study.dto.request.study.ReqAddMajorDto;
+import com.korit.springboot_study.dto.request.study.ReqUpdateMajorDto;
 import com.korit.springboot_study.dto.response.common.SuccessResponseDto;
 import com.korit.springboot_study.entity.study.Instructor;
 import com.korit.springboot_study.entity.study.Major;
@@ -34,7 +35,7 @@ public class StudentStudyService {
         return new SuccessResponseDto<>(foundInstructors);
     }
 
-    // insert 중에 오류가 발생하는건 굉장히 위험하다. 따라서 완충역할인 Transactional 이 필요!
+    // insert 중에 오류가 발생하는건 굉장히 위험하다. 따라서 완충역할인 Transactional 이 필요! (insert, update, delete)
     @Transactional(rollbackFor = Exception.class)
     public SuccessResponseDto<Major> addMajor(ReqAddMajorDto reqAddMajorDto) throws DuplicateKeyException {
         return new SuccessResponseDto<>(
@@ -49,8 +50,16 @@ public class StudentStudyService {
         return new SuccessResponseDto<>(
                 studentStudyRepository
                         .saveInstructor(new Instructor(0, reqAddInstructorDto.getInstructorName()))
-                        .orElseThrow()
+                        .get() // orElseThrow()
         );
+    }
+
+    @Transactional(rollbackFor = Exception.class)
+    public SuccessResponseDto<Major> modifyMajor(int majorId, ReqUpdateMajorDto reqUpdateMajorDto) throws NotFoundException, DuplicateKeyException {
+        Major modifiedMajor =  studentStudyRepository
+                .updateMajor(new Major(majorId, reqUpdateMajorDto.getMajorName()))
+                .orElseThrow(() -> new NotFoundException("해당 학과 ID는 존재하지 않습니다."));
+        return new SuccessResponseDto<>(modifiedMajor);
     }
 
 }
