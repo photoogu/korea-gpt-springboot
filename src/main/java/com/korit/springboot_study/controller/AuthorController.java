@@ -1,47 +1,36 @@
 package com.korit.springboot_study.controller;
 
 import com.korit.springboot_study.dto.request.ReqAddAuthorDto;
+import com.korit.springboot_study.dto.request.ReqSearchAuthorDto;
 import com.korit.springboot_study.dto.response.common.SuccessResponseDto;
 import com.korit.springboot_study.entity.Author;
 import com.korit.springboot_study.service.AuthorService;
+import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
-import org.apache.ibatis.javassist.NotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@Validated
 @RestController
+@Api(tags = "저자 API")
 public class AuthorController {
 
     @Autowired
     private AuthorService authorService;
 
-    @GetMapping("/api/authors")
-    @ApiOperation(value = "저자 정보 조회")
-    public ResponseEntity<SuccessResponseDto<List<Author>>> getAuthors(
-            @RequestParam(required = false) String authorName
-            ) throws NotFoundException {
-        SuccessResponseDto<List<Author>> foundAuthors = null;
-
-        if (authorName != null) {
-            foundAuthors = authorService.getAuthorByName(authorName);
-        } else {
-            foundAuthors = authorService.getAuthorsAll();
-        }
-
-        return ResponseEntity.ok().body(foundAuthors);
+    @ApiOperation(value = "도서 저자 추가")
+    @PostMapping("/api/book/author")
+    public ResponseEntity<SuccessResponseDto<Author>> addAuthor(@RequestBody ReqAddAuthorDto reqAddAuthorDto) {
+        return ResponseEntity.ok().body(new SuccessResponseDto<>(authorService.addAuthor(reqAddAuthorDto)));
     }
 
-    @PostMapping("/api/author")
-    @ApiOperation(value = "저자 추가")
-    public ResponseEntity<SuccessResponseDto<Author>> addAuthor(
-            @RequestBody ReqAddAuthorDto reqAddAuthorDto
-    ) {
-        return ResponseEntity.ok().body(authorService.saveAuthor(reqAddAuthorDto));
+    @ApiOperation(value = "도서 저자 검색")
+    @GetMapping("/api/book/authors")
+    public ResponseEntity<SuccessResponseDto<List<Author>>> searchAuthor(@ModelAttribute ReqSearchAuthorDto searchAuthorDto) throws Exception {
+        return ResponseEntity.ok().body(new SuccessResponseDto<>(authorService.getAuthors(searchAuthorDto)));
     }
+
 
 }

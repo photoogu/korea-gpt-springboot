@@ -10,18 +10,17 @@
         <result property="publisherName" column="publisher_name" />
     </resultMap>
 
-    <select id="selectPublisherAll" resultMap="publisherResultMap">
-        select *
-        from publisher_tb
+    <select id="selectAllByNameContaining" resultMap="publisherResultMap">
+        select
+            publisher_id,
+            publisher_name
+        from
+            publisher_tb
+        where
+            publisher_name like concat("%", #{publisherName}, "%")
     </select>
 
-    <select id="selectPublisherByName" resultMap="publisherResultMap">
-        select *
-        from publisher_tb
-        where publisher_name like concat("%", #{publisherName}, "%")
-    </select>
-
-    <insert id="insertPublisher" keyProperty="publisherId" useGeneratedKeys="true">
+    <insert id="insert" keyProperty="publisherId" useGeneratedKeys="true">
         insert into publisher_tb
         values (default, #{publisherName})
     </insert>

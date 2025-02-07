@@ -10,18 +10,17 @@
         <result property="categoryName" column="category_name" />
     </resultMap>
 
-    <select id="selectCategoryAll" resultMap="categoryResultMap">
-        select *
-        from category_tb
+    <select id="selectAllByNameContaining" resultMap="categoryResultMap">
+        select
+            category_id,
+            category_name
+        from
+            category_tb
+        where
+            category_name like concat("%", #{categoryName}, "%")
     </select>
 
-    <select id="selectCategoryByName" resultMap="categoryResultMap">
-        select *
-        from category_tb
-        where category_name like concat("%", #{categoryName}, "%")
-    </select>
-
-    <insert id="insertCategory" keyProperty="categoryId" useGeneratedKeys="true">
+    <insert id="insert" keyProperty="categoryId" useGeneratedKeys="true">
         insert into category_tb
         values (default, #{categoryName})
     </insert>

@@ -10,18 +10,17 @@
         <result property="authorName" column="author_name" />
     </resultMap>
 
-    <select id="selectAuthorAll" resultMap="authorResultMap">
-        select *
-        from author_tb
+    <select id="selectAllByNameContaining" resultMap="authorResultMap">
+        select
+            author_id,
+            author_name
+        from
+            author_tb
+        where
+            author_name like concat("%", #{authorName}, "%")
     </select>
 
-    <select id="selectAuthorByName" resultMap="authorResultMap">
-        select *
-        from author_tb
-        where author_name like concat("%", #{authorName}, "%")
-    </select>
-
-    <insert id="insertAuthor" keyProperty="authorId" useGeneratedKeys="true">
+    <insert id="insert" keyProperty="authorId" useGeneratedKeys="true">
         insert into author_tb
         values (default, #{authorName})
     </insert>
