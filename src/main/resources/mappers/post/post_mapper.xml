@@ -70,7 +70,7 @@
             <!-- null 값 포함하면 안되는 경우, outer join 이 아닌 inner join 을 사용 -->
             left outer join cte_post_like_count_tb cplct on(cplct.post_id = pt.post_id)
         where
-            post_id = #{postId}
+            pt.post_id = #{postId}
     </select>
 
     <select id="selectAllByKeywordContaining" resultMap="postResultMap">

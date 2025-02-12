@@ -1,5 +1,6 @@
 package com.korit.springboot_study.controller;
 
+import com.korit.springboot_study.aspect.annotation.TimerAop;
 import com.korit.springboot_study.dto.request.ReqCreatePostDto;
 import com.korit.springboot_study.dto.response.common.SuccessResponseDto;
 import com.korit.springboot_study.entity.Post;
@@ -28,6 +29,7 @@ public class PostController {
     }
 
     // Read - 단건조회
+    @TimerAop
     @GetMapping("/api/post/{postId}")
     public ResponseEntity<SuccessResponseDto<Post>> getPost(@PathVariable int postId) throws Exception {
         return ResponseEntity
