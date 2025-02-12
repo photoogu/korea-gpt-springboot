@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<Configuration status="INFO">
+<Configuration status="DEBUG">
     <Appenders>
         <Console name="Console" target="SYSTEM_OUT">
             <PatternLayout pattern="%d{yyyy-MM-dd HH:mm:ss.SSS} [%t] %highlight{%-5level} %logger{36} - %msg%n"/>
         </Console>
 
-        <RollingFile name="FileAppender" fileName="logs/app.log"
+        <RollingFile name="RootFileAppender" fileName="logs/app.log"
                      filePattern="logs/app-%d{yyyy-MM-dd}-%i.log.gz">
             <PatternLayout>
                 <Pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%t] %highlight{%-5level} %logger{36} - %msg%n</Pattern>
@@ -16,7 +16,7 @@
             </Policies>
         </RollingFile>
 
-        <RollingFile name="FileAppender" fileName="logs/error.log"
+        <RollingFile name="ErrorFileAppender" fileName="logs/error.log"
                      filePattern="logs/error-%d{yyyy-MM-dd}-%i.log.gz">
             <PatternLayout>
                 <Pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%t] %highlight{%-5level} %logger{36} - %msg%n</Pattern>
@@ -32,14 +32,18 @@
     </Appenders>
 
     <Loggers>
-        <Logger name="com.korit.springboot_study" level="debug" additivity="false">
+        <Root level="INFO">
             <AppenderRef ref="Console"/>
-            <AppenderRef ref="FileAppender" />
+            <AppenderRef ref="RootFileAppender" />
+        </Root>
+        <Logger name="com.korit.springboot_study" level="DEBUG" additivity="false">
+            <AppenderRef ref="Console"/>
+            <AppenderRef ref="RootFileAppender" />
         </Logger>
 
-        <Root level="info">
+        <Logger name="com.korit.springboot_study" level="ERROR" additivity="false">
             <AppenderRef ref="Console"/>
-            <AppenderRef ref="FileAppender" />
-        </Root>
+            <AppenderRef ref="ErrorFileAppender" />
+        </Logger>
     </Loggers>
 </Configuration>
