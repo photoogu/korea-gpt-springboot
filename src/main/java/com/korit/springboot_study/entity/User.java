@@ -20,5 +20,10 @@ public class User {
     private String name;
     private String email;
 
+    private int isAccountNonExpired;
+    private int isAccountNonLocked;
+    private int isCredentialsNonExpired;
+    private int isEnabled;
+
     List<UserRole> userRoles;
 }
