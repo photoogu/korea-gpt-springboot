@@ -3,6 +3,8 @@ package com.korit.springboot_study.config;
 import com.korit.springboot_study.security.exception.CustomAuthenticationEntryPoint;
 import com.korit.springboot_study.security.filter.CustomAuthenticationFilter;
 import com.korit.springboot_study.security.filter.JwtAuthenticationFilter;
+import com.korit.springboot_study.security.oauth2.OAuth2SuccessHandler;
+import com.korit.springboot_study.security.oauth2.Oauth2Service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -17,6 +19,12 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @EnableWebSecurity
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
     // 기본 세팅 : localhost:8080/ 에 대한 모든 요청에 대해 login 페이지로 넘어가서 인증을 요구함
+
+    @Autowired
+    private OAuth2SuccessHandler oAuth2SuccessHandler;
+
+    @Autowired
+    private Oauth2Service oauth2Service;
 
     @Autowired
     private CustomAuthenticationEntryPoint customAuthenticationEntryPoint;
@@ -44,6 +52,11 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         http.exceptionHandling()
                         .authenticationEntryPoint(customAuthenticationEntryPoint);
 
+        http.oauth2Login()
+                .successHandler(oAuth2SuccessHandler)
+                        .userInfoEndpoint()
+                                .userService(oauth2Service);
+
         http.authorizeRequests()
                 .antMatchers(       // 특정 요청주소에는 모든 권한을 줌! 인증이 필요 X
                         "/swagger-ui/**",
@@ -57,9 +70,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 )
                 .permitAll()
                 .anyRequest()       // 모든 요청에 대해 (antMatchers 로 설정한 요청 URL 을 제외한)
-                .authenticated()    // 인증이 필요합니다!
-                .and()
-                .exceptionHandling() // 인증에 대한 예외가 발생했을 때 내가 처리할게요!
-                .authenticationEntryPoint(customAuthenticationEntryPoint); // 이걸로 처리할게요!
+                .authenticated();    // 인증이 필요합니다!
+//                .and()
+//                .exceptionHandling() // 인증에 대한 예외가 발생했을 때 내가 처리할게요!
+//                .authenticationEntryPoint(customAuthenticationEntryPoint); // 이걸로 처리할게요!
     }
 }

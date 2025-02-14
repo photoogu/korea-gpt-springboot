@@ -3,3 +3,4 @@
 2025-02-13 15:43:47.840 [http-nio-8080-exec-2] ERROR com.korit.springboot_study.aspect.LoggingAspect - 사용자 정보를 다시 확인하세요.
 2025-02-13 15:44:28.466 [http-nio-8080-exec-8] ERROR com.korit.springboot_study.aspect.LoggingAspect - 사용자 정보를 다시 확인하세요.
 2025-02-13 15:49:27.978 [http-nio-8080-exec-9] ERROR com.korit.springboot_study.aspect.PrintParamAspect - 로그를 출력합니다.
+2025-02-13 16:30:29.428 [http-nio-8080-exec-6] ERROR com.korit.springboot_study.aspect.PrintParamAspect - 로그를 출력합니다.

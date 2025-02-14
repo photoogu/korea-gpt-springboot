@@ -53,7 +53,7 @@ public class PostController {
         return ResponseEntity.ok().body(new SuccessResponseDto<>(postService.likePost(postId, userId)));
     }
 
-    @DeleteMapping("/api/post/{postId}/like")
+    @DeleteMapping("/api/post/{postId}/dislike")
     public ResponseEntity<SuccessResponseDto<Post>> dislikePost(@PathVariable int postId) throws Exception {
         return ResponseEntity.ok().body(new SuccessResponseDto<>(null));
     }
