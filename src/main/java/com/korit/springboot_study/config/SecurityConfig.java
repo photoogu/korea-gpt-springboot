@@ -39,6 +39,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
+        http.cors(); // Cross Origin 세팅
         http.csrf().disable();      // Cross Site Request Forgery >> 사이트 인증
         http.httpBasic().disable(); // alert 창으로 인증하는 것 >> 이거 안쓸거에요!(disable)
         http.formLogin().disable(); // 기본 세팅으로 되어있는 로그인창 >> 이거 안쓸거에요!(disable)
@@ -62,7 +63,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                         "/swagger-ui/**",
                         "/v2/api-docs/**",
                         "/v3/api-docs/**",
-                        "/swagger-resources/**"
+                        "/swagger-resources/**",
+                        "/server/hc"
                 )
                 .permitAll()
                 .antMatchers(            // 기능 별로 따로 줘도 됨!
