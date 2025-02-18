@@ -41,12 +41,13 @@ public class JwtProvider {
     }
 
     public Claims parseToken(String token) {
+        System.out.println(token);
         Claims claims = null;
         try {
             JwtParser parser = Jwts.parserBuilder()
                     .setSigningKey(key)
                     .build();
-            claims = parser.parseClaimsJws(removeBearer(token)).getBody();
+            claims = parser.parseClaimsJws(token).getBody();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -54,7 +55,7 @@ public class JwtProvider {
     }
 
     // Authorization -> AccessToken(Bearer ?????.?????.?????) 에서 앞의 "Bearer " 을 삭제하여 토큰만 가져오게 하기 위함
-    private String removeBearer(String bearerToken) {
+    public String removeBearer(String bearerToken) {
         String token = null;
         final String BEARER_KEYWORD = "Bearer ";
         if(bearerToken.startsWith(BEARER_KEYWORD)) {

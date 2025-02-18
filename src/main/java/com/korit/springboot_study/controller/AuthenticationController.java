@@ -35,4 +35,10 @@ public class AuthenticationController {
         return ResponseEntity.ok().body(new SuccessResponseDto<>(authenticationService.signin(reqSigninDto)));
     }
 
+    @PostMapping("/api/auth/logout")
+    @ApiOperation(value = "로그아웃")
+    public ResponseEntity<SuccessResponseDto<?>> logout() {
+        return ResponseEntity.ok().body(new SuccessResponseDto<>(null));
+    }
+
 }

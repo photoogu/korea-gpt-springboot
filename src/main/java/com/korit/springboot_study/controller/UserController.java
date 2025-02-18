@@ -68,7 +68,7 @@ public class UserController {
         return ResponseEntity.ok().body(new SuccessResponseDto<>(userService.modifyUser(userId, reqModifyUserDto)));
     }
 
-    @DeleteMapping("api/user/{userId}")
+    @DeleteMapping("/api/user/{userId}")
     @ApiOperation(value = "사용자 정보 삭제")
     public ResponseEntity<SuccessResponseDto<?>> deleteUser(
             @Min(value = 1, message = "사용자 ID는 1이상의 정수입니다.")
